@@ -1,28 +1,27 @@
-pipeline {
+pipline{
     agent any
     tools {
-      maven 'maven391'
+        'maven391'
     }
-    stages {
-        stage('echo et test unitaire') {
-            paralelle{
-                 stage('echo version') {
-                    steps {
+    stage{
+        stage('echo et teste unitaire'){
+            parallel{
+                stage('version'){
+                    step{
                         sh 'mvn --version'
-                        }
                     }
-                 stage('test unit') {
-                    steps {
+                }
+                stage('teste unitaire'){
+                    step{
                         sh 'mvn test'
-                        }
                     }
                 }
             }
-         stage('package') {
-            steps {
-                sh 'mvn package -DskipTest'
-            }
         }
-        
+          stage('packages'){
+                        step{
+                            sh 'mvn package -DskipTest'
+                        }
+                    }
     }
 }
