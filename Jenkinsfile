@@ -23,7 +23,7 @@ pipeline{
                             sh 'mvn package -DskipTest'
                         }
                     }
-            post { 
+           post { 
                always { 
                    archiveArtifacts artifacts: 'target/*.war'
                 }
