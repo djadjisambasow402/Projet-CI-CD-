@@ -1,7 +1,7 @@
 pipeline {
     agent any
     tools {
-      maven 'maven"391'
+      maven 'maven391'
     }
     stages {
         stage('Get maven version') {
