@@ -4,9 +4,11 @@ pipeline {
       maven 'maven391'
     }
     stages {
-        stage('Get maven version') {
+        stage('test unit') {
             steps {
-                sh 'mvn --version '
+                echo " my teste unit djadji samba sow"
+                sh 'mvn --version'
+                sh 'mvn test'
             }
         }
     }
