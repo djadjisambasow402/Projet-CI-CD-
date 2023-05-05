@@ -21,8 +21,12 @@ pipeline{
            stage('packages') {
                         steps {
                             sh 'mvn package -DskipTest'
-                            archiveArtifacts artifacts: 'target/*.war'
                         }
                     }
+            post { 
+               always { 
+                   archiveArtifacts artifacts: 'target/*.war'
+                }
+            }
     }
 }
