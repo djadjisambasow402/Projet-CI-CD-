@@ -1,7 +1,7 @@
 pipline{
     agent any
     tools {
-        'maven391'
+      maven 'maven391'
     }
     stages {
         stage('echo et teste unitaire'){
