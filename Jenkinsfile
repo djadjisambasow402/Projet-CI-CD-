@@ -6,7 +6,7 @@ pipeline{
     stages {
         stage('echo et teste unitaire'){
             parallel {
-                stage('version') {
+                stage('version maven') {
                     steps {
                         sh 'mvn --version'
                     }
