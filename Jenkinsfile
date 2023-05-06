@@ -22,7 +22,13 @@ pipeline{
                         steps {
                             sh 'mvn package -DskipTest'
                         }
-                    }
+           }
+           stage('BUILD ') {
+                        steps {
+                            sh 'docker build -t djadjisambasow/test:v1.0'
+                        }
+           }
+        
     }
      post { 
           always { 
