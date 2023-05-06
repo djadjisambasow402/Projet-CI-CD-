@@ -23,9 +23,11 @@ pipeline{
                             sh 'mvn package -DskipTest'
                         }
            }
-           stage('BUILD ') {
+           stage('BUILD and run ') {
                         steps {
                             sh 'sudo docker build -t djadjisambasow/test:v1.0 .'
+                            sh 'sudo docker run --name test -d -p 8088:8088 '
+
                         }
            }
         
