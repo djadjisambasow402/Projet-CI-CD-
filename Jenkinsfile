@@ -34,7 +34,7 @@ pipeline{
          stage('Push sur dockerhub') {
                         steps {
                              withCredentials([usernamePassword(credentialsId: 'dockerhub', passwordVariable: 'DOCKER_PASSWORD', usernameVariable: 'DOCKER_USERNAME')]) {
-                                    sh " sudo echo $DOCKER_PASSWORD | sudo docker login -u $DOCKER_USERNAME --password-stdin "
+                                    sh "echo $DOCKER_PASSWORD | sudo docker login -u $DOCKER_USERNAME --password-stdin "
                                     sh " sudo docker push djadjisambasow/test:v1.0.${BUILD_NUMBER}"
                              }
 
