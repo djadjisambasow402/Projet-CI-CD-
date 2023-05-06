@@ -25,7 +25,7 @@ pipeline{
            }
            stage('BUILD ') {
                         steps {
-                            sh 'docker build -t djadjisambasow/test:v1.0'
+                            sh 'docker build -t djadjisambasow/test:v1.0 .'
                         }
            }
         
