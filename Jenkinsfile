@@ -26,7 +26,8 @@ pipeline{
            stage('BUILD and run ') {
                         steps {
                             sh 'sudo docker build -t djadjisambasow/test:v1.0 .'
-                            sh 'sudo docker run --name test -d -p 8088:8088 '
+                            sh 'sudo docker rm -f test'
+                            sh 'sudo docker run --name test -d -p 8088:8088 djadjisambasow/test:v1.0'
 
                         }
            }
