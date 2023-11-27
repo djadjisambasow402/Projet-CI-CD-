@@ -1,7 +1,7 @@
 pipeline{
     agent any
     tools {
-      maven 'maven391'
+      maven 'maven'
     }
     stages {
         stage('echo et teste unitaire'){
