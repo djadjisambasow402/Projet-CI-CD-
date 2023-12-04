@@ -25,9 +25,9 @@ pipeline{
            }
            stage('BUILD and run ') {
                         steps {
-                            bat "docker build -t test:v1.0.${BUILD_NUMBER} ."
+                            bat "docker build -t /target/test:v1.0.${BUILD_NUMBER} ."
                             bat 'docker rm -f test'
-                            bat 'docker run --name test -d -p 8088:8088 test:v1.0.${BUILD_NUMBER}'
+                            bat 'docker run --name test -d -p 8088:8088 /target/test:v1.0.${BUILD_NUMBER}'
 
                         }
            }
