@@ -62,6 +62,7 @@ pipeline {
                 script {
                     sh "cat ${DEPLOYMENT_FILE}"
                     sh "sed -i 's/${APP_NAME}.*/${APP_NAME}:${IMAGE_TAG}/g' ${DEPLOYMENT_FILE}"
+                    sh "mv ${DEPLOYMENT_FILE} /opt/template"
                     sh "cat ${DEPLOYMENT_FILE}"
                 }
             }
@@ -70,13 +71,15 @@ pipeline {
             steps {
                 script {
                     sh """
+                    cd /opt/template
+                    git init
                     git config --global user.name "dssow"
                     git config --global user.email "dssow@gainde2000.sn"
                     git add ${DEPLOYMENT_FILE}
                     git commit -m 'Updated the deployment file'
                     """
                     withCredentials([usernamePassword(credentialsId: 'gitops-repo', passwordVariable: 'pass', usernameVariable: 'user')]) {
-                        sh "git push --set-upstream origin main http://$user:$pass@gitlab-it.gainde2000.sn/dssow/gitops.git "
+                        sh "git push http://$user:$pass@gitlab-it.gainde2000.sn/dssow/gitops.git main"
                     }
                 }
             }
