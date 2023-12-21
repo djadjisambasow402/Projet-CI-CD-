@@ -40,6 +40,10 @@ pipeline{
 
                         }
            }   
+        stage('scan image with trivy') {
+            step{
+             sh "trivy image --format template --template "@/opt/templatehtml.tpl" -o rapport-scan.html domoda/cd-projet:v1.0.${BUILD_NUMBER} "   
+            }
     }
      post { 
           always { 
