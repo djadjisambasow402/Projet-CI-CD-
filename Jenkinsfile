@@ -48,7 +48,7 @@ pipeline{
            }   
         
         stage('scan image with trivy') {
-            step{
+            steps {
              sh "trivy image --format template --template '@/opt/templatehtml.tpl' -o rapport-scan.html ${IMAGE_NAME}:${IMAGE_TAG} "   
             }
         }  
@@ -62,7 +62,7 @@ pipeline{
             
         stage('Push the changed deployment file to Git'){
             steps {
-                script{
+                script {
                     sh """
                     git config --global user.name "dssow"
                     git config --global user.email "dssow@gainde2000.sn"
