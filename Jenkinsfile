@@ -51,6 +51,29 @@ pipeline{
             step{
              sh "trivy image --format template --template "@/opt/templatehtml.tpl" -o rapport-scan.html ${IMAGE_NAME}:${IMAGE_TAG} "   
             }
+            
+        stage('Updating Kubernetes deployment file'){
+            steps {
+                sh "cat deploiement.yml"
+                sh "sed -i 's/${APP_NAME}.*/${APP_NAME}:${IMAGE_TAG}/g' deploiement.yml"
+                sh "cat deploiement.yml"
+            }
+        }
+            
+        stage('Push the changed deployment file to Git'){
+            steps {
+                script{
+                    sh """
+                    git config --global user.name "dssow"
+                    git config --global user.email "dssow@gainde2000.sn"
+                    git add deploiement.yml
+                    git commit -m 'Updated the deployment file' """
+                    withCredentials([usernamePassword(credentialsId: 'gitops-repo', passwordVariable: 'pass', usernameVariable: 'user')]) {
+                        sh "git push http://$user:$pass@gitlab-it.gainde2000.sn/dssow/gitops.git main" 
+                    }
+                }
+            }
+        }
 
      post { 
           always { 
