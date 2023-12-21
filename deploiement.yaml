@@ -1,0 +1,41 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: front
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: front
+  template:
+    metadata:
+      labels:
+        app: front
+    spec:
+      containers:
+      - name: front
+        image: domoda/cd-projet:v1.0.2
+        ports:
+        - containerPort: 80
+        env:
+        - name: apiUrl
+          value: backend-service:30063
+
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: front
+  name: front-service
+spec:
+  type: NodePort
+  ports:
+    - name: front-port
+      port: 80
+      nodePort:
+      targetPort: 80
+  selector:
+    app: front
+
