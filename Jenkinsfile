@@ -1,5 +1,11 @@
 pipeline{
     agent any
+    environment {
+        DOCKERHUB_USERNAME = "domoda"
+        APP_NAME = "cd-projet"
+        IMAGE_TAG = "v1.0.${BUILD_NUMBER}"
+        IMAGE_NAME = "${DOCKERHUB_USERNAME}" + "/" + "${APP_NAME}"
+        }
     tools {
       maven 'maven3'
     }
@@ -25,9 +31,9 @@ pipeline{
            }
            stage('BUILD and run ') {
                         steps {
-                            sh "docker build -t domoda/cd-projet:v1.0.${BUILD_NUMBER} ."
-                            sh 'docker rm -f cd-projet'
-                            sh 'docker run --name test -d -p 8088:8088 domoda/cd-projet:v1.0.${BUILD_NUMBER}'
+                            sh "docker build -t ${IMAGE_NAME}:${IMAGE_TAG} ."
+                            sh 'docker rm -f ${APP_NAME}'
+                            sh 'docker run --name ${APP_NAME} -d -p 8088:8088 ${IMAGE_NAME}:${IMAGE_TAG}'
 
                         }
            }
@@ -35,7 +41,7 @@ pipeline{
                         steps {
                              withCredentials([usernamePassword(credentialsId: 'dockerhub-dss', passwordVariable: 'DOCKER_PASSWORD', usernameVariable: 'DOCKER_USERNAME')]) {
                                     sh "docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD"
-                                    sh "docker push domoda/cd-projet:v1.0.${BUILD_NUMBER}"
+                                    sh "docker push ${IMAGE_NAME}:${IMAGE_TAG}"
                              }
 
                         }
@@ -43,21 +49,9 @@ pipeline{
         
         stage('scan image with trivy') {
             step{
-             sh "trivy image --format template --template "@/opt/templatehtml.tpl" -o rapport-scan.html domoda/cd-projet:v1.0.${BUILD_NUMBER} "   
+             sh "trivy image --format template --template "@/opt/templatehtml.tpl" -o rapport-scan.html ${IMAGE_NAME}:${IMAGE_TAG} "   
             }
 
-        stage('deploiement sur le cluster prod') {
-            step{
-             sh "git "   
-                }
-         }
-
-        stage('deploiement sur le cluster préprod') {
-            step{
-             sh " "   
-                }
-         }
-            
      post { 
           always { 
                archiveArtifacts artifacts: 'target/*.war'
