@@ -63,6 +63,7 @@ pipeline {
                     sh "cat ${DEPLOYMENT_FILE}"
                     sh "sed -i 's/${APP_NAME}.*/${APP_NAME}:${IMAGE_TAG}/g' ${DEPLOYMENT_FILE}"
                     sh "mv ${DEPLOYMENT_FILE} /var/lib/jenkins/deploiement"
+                    sh "cd /var/lib/jenkins/deploiement"
                     sh "cat ${DEPLOYMENT_FILE}"
                 }
             }
