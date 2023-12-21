@@ -76,8 +76,8 @@ pipeline {
                     git commit -m 'Updated the deployment file'
                     """
                     withCredentials([usernamePassword(credentialsId: 'gitops-repo', passwordVariable: 'pass', usernameVariable: 'user')]) {
-                        sh "git git checkout -b main "
-                        sh "git git merge main"
+                        sh "git checkout -b main "
+                        sh "git merge main"
                         sh "git push http://$user:$pass@gitlab-it.gainde2000.sn/dssow/gitops.git main"
                     }
                 }
