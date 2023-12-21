@@ -6,7 +6,7 @@ pipeline {
         IMAGE_TAG = "v1.0.${BUILD_NUMBER}"
         IMAGE_NAME = "${DOCKERHUB_USERNAME}/${APP_NAME}"
         DEPLOYMENT_FILE = "deploiement.yml"
-        TEMPLATE_FILE = "/opt/templatehtml.tpl"
+        TEMPLATE_FILE = "/opt/template/html.tpl"
     }
     tools {
         maven 'maven3'
