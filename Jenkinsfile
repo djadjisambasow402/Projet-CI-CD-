@@ -48,7 +48,7 @@ pipeline{
 
         stage('deploiement sur le cluster prod') {
             step{
-             sh " "   
+             sh "git "   
                 }
          }
 
