@@ -62,7 +62,7 @@ pipeline {
                 script {
                     sh "cat ${DEPLOYMENT_FILE}"
                     sh "sed -i 's/${APP_NAME}.*/${APP_NAME}:${IMAGE_TAG}/g' ${DEPLOYMENT_FILE}"
-                    sh "mv ${DEPLOYMENT_FILE} /opt/template"
+                    sh "mv ${DEPLOYMENT_FILE} /var/lib/jenkins/deploiement"
                     sh "cat ${DEPLOYMENT_FILE}"
                 }
             }
@@ -71,7 +71,7 @@ pipeline {
             steps {
                 script {
                     sh """
-                    cd /opt/template
+                    cd /var/lib/jenkins/deploiement
                     git init
                     git config --global user.name "dssow"
                     git config --global user.email "dssow@gainde2000.sn"
