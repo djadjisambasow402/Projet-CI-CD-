@@ -35,8 +35,8 @@ pipeline {
             steps {
                 script {
                     sh "docker build -t ${IMAGE_NAME}:${IMAGE_TAG} ."
-                    sh 'docker rm -f ${APP_NAME}' || true
-                    sh "docker run --name ${APP_NAME} -d -p 8088:8088 ${IMAGE_NAME}:${IMAGE_TAG}" || true
+                    sh 'docker rm -f ${APP_NAME}' 
+                    sh "docker run --name ${APP_NAME} -d -p 8088:8088 ${IMAGE_NAME}:${IMAGE_TAG}" 
                 }
             }
         }
@@ -76,7 +76,7 @@ pipeline {
                     git commit -m 'Updated the deployment file'
                     """
                     withCredentials([usernamePassword(credentialsId: 'gitops-repo', passwordVariable: 'pass', usernameVariable: 'user')]) {
-                        sh "git push http://$user:$pass@gitlab-it.gainde2000.sn/dssow/gitops.git main" || true
+                        sh "git push http://$user:$pass@gitlab-it.gainde2000.sn/dssow/gitops.git main"
                     }
                 }
             }
@@ -85,7 +85,6 @@ pipeline {
     post {
         always {
             script {
-                sh 'ls target/*.war || true'
                 archiveArtifacts artifacts: 'target/*.war'
             }
         }
