@@ -49,7 +49,7 @@ pipeline{
         
         stage('scan image with trivy') {
             step{
-             sh "trivy image --format template --template "@/opt/templatehtml.tpl" -o rapport-scan.html ${IMAGE_NAME}:${IMAGE_TAG} "   
+             sh "trivy image --format template --template '@/opt/templatehtml.tpl' -o rapport-scan.html ${IMAGE_NAME}:${IMAGE_TAG} "   
             }
             
         stage('Updating Kubernetes deployment file'){
