@@ -8,34 +8,34 @@ pipeline{
             parallel {
                 stage('version') {
                     steps {
-                        bat 'mvn --version'
+                        sh 'mvn --version'
                     }
                 }
                 stage('teste unitaire') {
                     steps {
-                        bat 'mvn test'
+                        sh 'mvn test'
                     }
                 }
             }
         }
            stage('packages') {
                         steps {
-                            bat 'mvn package -DskipTest'
+                            sh 'mvn package -DskipTest'
                         }
            }
            stage('BUILD and run ') {
                         steps {
-                            bat "docker build -t /target/test:v1.0.${BUILD_NUMBER} ."
-                            bat 'docker rm -f test'
-                            bat 'docker run --name test -d -p 8088:8088 /target/test:v1.0.${BUILD_NUMBER}'
+                            sh "docker build -t domoda/cd-projet:v1.0.${BUILD_NUMBER} ."
+                            sh 'docker rm -f cd-projet'
+                            sh 'docker run --name test -d -p 8088:8088 domoda/cd-projet:v1.0.${BUILD_NUMBER}'
 
                         }
            }
          stage('Push sur dockerhub') {
                         steps {
-                             withCredentials([usernamePassword(credentialsId: 'dockerhub', passwordVariable: 'DOCKER_PASSWORD', usernameVariable: 'DOCKER_USERNAME')]) {
-                                    bat "docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD"
-                                    bat "docker push djadjisambasow/test:v1.0.${BUILD_NUMBER}"
+                             withCredentials([usernamePassword(credentialsId: 'dockerhub-dss', passwordVariable: 'DOCKER_PASSWORD', usernameVariable: 'DOCKER_USERNAME')]) {
+                                    sh "docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD"
+                                    sh "docker push domoda/cd-projet:v1.0.${BUILD_NUMBER}"
                              }
 
                         }
