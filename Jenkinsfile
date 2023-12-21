@@ -76,9 +76,9 @@ pipeline{
         }
 
      post { 
-          always { 
-               archiveArtifacts artifacts: 'target/*.war'
+       always { 
+             archiveArtifacts artifacts: 'target/*.war'
                   }
           }
-}
+   }
 }
