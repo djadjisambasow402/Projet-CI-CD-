@@ -53,7 +53,7 @@ pipeline {
         stage('scan image with trivy') {
             steps {
                 script {
-                    sh "trivy image --format template --template '@${TEMPLATE_FILE}' -o rapport-scan.html ${IMAGE_NAME}:${IMAGE_TAG}"
+                    sh "trivy image  ${IMAGE_NAME}:${IMAGE_TAG}"
                 }
             }
         }
