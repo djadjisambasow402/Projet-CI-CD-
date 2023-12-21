@@ -5,7 +5,7 @@ pipeline {
         APP_NAME = "cd-projet"
         IMAGE_TAG = "v1.0.${BUILD_NUMBER}"
         IMAGE_NAME = "${DOCKERHUB_USERNAME}/${APP_NAME}"
-        DEPLOYMENT_FILE = "deploiement.yml"
+        DEPLOYMENT_FILE = "deploiement.yaml"
         TEMPLATE_FILE = "/opt/template/html.tpl"
     }
     tools {
