@@ -40,11 +40,24 @@ pipeline{
 
                         }
            }   
+        
         stage('scan image with trivy') {
             step{
              sh "trivy image --format template --template "@/opt/templatehtml.tpl" -o rapport-scan.html domoda/cd-projet:v1.0.${BUILD_NUMBER} "   
             }
-    }
+
+        stage('deploiement sur le cluster prod') {
+            step{
+             sh " "   
+                }
+         }
+
+        stage('deploiement sur le cluster préprod') {
+            step{
+             sh " "   
+                }
+         }
+            
      post { 
           always { 
                archiveArtifacts artifacts: 'target/*.war'
