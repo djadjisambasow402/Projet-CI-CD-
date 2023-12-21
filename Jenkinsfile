@@ -1,16 +1,18 @@
-pipeline{
+pipeline {
     agent any
     environment {
         DOCKERHUB_USERNAME = "domoda"
         APP_NAME = "cd-projet"
         IMAGE_TAG = "v1.0.${BUILD_NUMBER}"
-        IMAGE_NAME = "${DOCKERHUB_USERNAME}" + "/" + "${APP_NAME}"
-        }
+        IMAGE_NAME = "${DOCKERHUB_USERNAME}/${APP_NAME}"
+        DEPLOYMENT_FILE = "deploiement.yml"
+        TEMPLATE_FILE = "/opt/templatehtml.tpl"
+    }
     tools {
-      maven 'maven3'
+        maven 'maven3'
     }
     stages {
-        stage('echo et teste unitaire'){
+        stage('echo et teste unitaire') {
             parallel {
                 stage('version') {
                     steps {
@@ -24,61 +26,68 @@ pipeline{
                 }
             }
         }
-           stage('packages') {
-                        steps {
-                            sh 'mvn package -DskipTest'
-                        }
-           }
-           stage('BUILD and run ') {
-                        steps {
-                            sh "docker build -t ${IMAGE_NAME}:${IMAGE_TAG} ."
-                            sh 'docker rm -f ${APP_NAME}'
-                            sh 'docker run --name ${APP_NAME} -d -p 8088:8088 ${IMAGE_NAME}:${IMAGE_TAG}'
-
-                        }
-           }
-         stage('Push sur dockerhub') {
-                        steps {
-                             withCredentials([usernamePassword(credentialsId: 'dockerhub-dss', passwordVariable: 'DOCKER_PASSWORD', usernameVariable: 'DOCKER_USERNAME')]) {
-                                    sh "docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD"
-                                    sh "docker push ${IMAGE_NAME}:${IMAGE_TAG}"
-                             }
-
-                        }
-           }   
-        
-        stage('scan image with trivy') {
+        stage('packages') {
             steps {
-             sh "trivy image --format template --template '@/opt/templatehtml.tpl' -o rapport-scan.html ${IMAGE_NAME}:${IMAGE_TAG} "   
-            }
-        }  
-        stage('Updating Kubernetes deployment file'){
-            steps {
-                sh "cat deploiement.yml"
-                sh "sed -i 's/${APP_NAME}.*/${APP_NAME}:${IMAGE_TAG}/g' deploiement.yml"
-                sh "cat deploiement.yml"
+                sh 'mvn package -DskipTest'
             }
         }
-            
-        stage('Push the changed deployment file to Git'){
+        stage('BUILD and run ') {
+            steps {
+                script {
+                    sh "docker build -t ${IMAGE_NAME}:${IMAGE_TAG} ."
+                    sh 'docker rm -f ${APP_NAME}' || true
+                    sh "docker run --name ${APP_NAME} -d -p 8088:8088 ${IMAGE_NAME}:${IMAGE_TAG}" || true
+                }
+            }
+        }
+        stage('Push sur dockerhub') {
+            steps {
+                script {
+                    withCredentials([usernamePassword(credentialsId: 'dockerhub-dss', passwordVariable: 'DOCKER_PASSWORD', usernameVariable: 'DOCKER_USERNAME')]) {
+                        sh "docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD"
+                        sh "docker push ${IMAGE_NAME}:${IMAGE_TAG}"
+                    }
+                }
+            }
+        }
+        stage('scan image with trivy') {
+            steps {
+                script {
+                    sh "trivy image --format template --template '@${TEMPLATE_FILE}' -o rapport-scan.html ${IMAGE_NAME}:${IMAGE_TAG}"
+                }
+            }
+        }
+        stage('Updating Kubernetes deployment file') {
+            steps {
+                script {
+                    sh "cat ${DEPLOYMENT_FILE}"
+                    sh "sed -i 's/${APP_NAME}.*/${APP_NAME}:${IMAGE_TAG}/g' ${DEPLOYMENT_FILE}"
+                    sh "cat ${DEPLOYMENT_FILE}"
+                }
+            }
+        }
+        stage('Push the changed deployment file to Git') {
             steps {
                 script {
                     sh """
                     git config --global user.name "dssow"
                     git config --global user.email "dssow@gainde2000.sn"
-                    git add deploiement.yml
-                    git commit -m 'Updated the deployment file' """
+                    git add ${DEPLOYMENT_FILE}
+                    git commit -m 'Updated the deployment file'
+                    """
                     withCredentials([usernamePassword(credentialsId: 'gitops-repo', passwordVariable: 'pass', usernameVariable: 'user')]) {
-                        sh "git push http://$user:$pass@gitlab-it.gainde2000.sn/dssow/gitops.git main" 
+                        sh "git push http://$user:$pass@gitlab-it.gainde2000.sn/dssow/gitops.git main" || true
                     }
                 }
             }
         }
-
-     post { 
-       always { 
-             archiveArtifacts artifacts: 'target/*.war'
-                  }
-          }
-   }
+    }
+    post {
+        always {
+            script {
+                sh 'ls target/*.war || true'
+                archiveArtifacts artifacts: 'target/*.war'
+            }
+        }
+    }
 }
