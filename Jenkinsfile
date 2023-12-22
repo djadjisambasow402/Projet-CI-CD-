@@ -81,6 +81,7 @@ pipeline {
                     withCredentials([usernamePassword(credentialsId: 'gitops-repo', passwordVariable: 'pass', usernameVariable: 'user')]) {
                         sh "git checkout -b main"
                         sh "git merge main"
+                        sh "git pull http://$user:$pass@gitlab-it.gainde2000.sn/dssow/gitops.git"
                         sh "git push http://$user:$pass@gitlab-it.gainde2000.sn/dssow/gitops.git main" 
                     }
                 }
