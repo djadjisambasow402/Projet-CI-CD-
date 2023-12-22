@@ -7,6 +7,7 @@ pipeline {
         IMAGE_NAME = "${DOCKERHUB_USERNAME}/${APP_NAME}"
         DEPLOYMENT_FILE = "deploiement.yaml"
         TEMPLATE_FILE = "/opt/template/html.tpl"
+        DEPLOYMENT_FOLDER= "/var/lib/jenkins/deploiement"
     }
     tools {
         maven 'maven3'
@@ -62,16 +63,17 @@ pipeline {
             steps {
                 sh "cat ${DEPLOYMENT_FILE}"
                 sh "sed -i 's/${APP_NAME}.*/${APP_NAME}:${IMAGE_TAG}/g' ${DEPLOYMENT_FILE}"
-                sh " mv ${DEPLOYMENT_FILE} /var/lib/jenkins/deploiement"
-                sh " cd /var/lib/jenkins/deploiement"
                 sh "cat ${DEPLOYMENT_FILE}"
+                sh "mv ${DEPLOYMENT_FILE} /var/lib/jenkins/deploiement"
             }
         }
             
         stage('Push the changed deployment file to Git'){
             steps {
                 script {
+                    dir("${DEPLOYMENT_FOLDER}"){
                     sh """
+                    git init
                     git config --global user.name "dssow"
                     git config --global user.email "dssow@gainde2000.sn"
                     git add deploiement.yml
@@ -81,6 +83,7 @@ pipeline {
                     }
                 }
             }
+        }
         }
     }
     post {
