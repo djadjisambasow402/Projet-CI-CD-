@@ -34,9 +34,9 @@ pipeline {
         stage('BUILD and run ') {
             steps {
                 script {
-                    sh "sudo docker build -t ${IMAGE_NAME}:${IMAGE_TAG} ."
-                    sh 'sudo docker rm -f ${APP_NAME}' 
-                    sh "sudo docker run --name ${APP_NAME} -d -p 8088:8088 ${IMAGE_NAME}:${IMAGE_TAG}" 
+                    sh "docker build -t ${IMAGE_NAME}:${IMAGE_TAG} ."
+                    sh 'docker rm -f ${APP_NAME}' 
+                    sh "docker run --name ${APP_NAME} -d -p 8088:8088 ${IMAGE_NAME}:${IMAGE_TAG}" 
                 }
             }
         }
@@ -44,8 +44,8 @@ pipeline {
             steps {
                 script {
                     withCredentials([usernamePassword(credentialsId: 'dockerhub-dss', passwordVariable: 'DOCKER_PASSWORD', usernameVariable: 'DOCKER_USERNAME')]) {
-                        sh "sudo docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD"
-                        sh "sudo docker push ${IMAGE_NAME}:${IMAGE_TAG}"
+                        sh "docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD"
+                        sh "docker push ${IMAGE_NAME}:${IMAGE_TAG}"
                     }
                 }
             }
