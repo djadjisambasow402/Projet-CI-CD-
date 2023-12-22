@@ -81,7 +81,7 @@ pipeline {
                         sh "git remote add origin http://$user:$pass@gitlab-it.gainde2000.sn/dssow/gitops.git"
                         sh "git pull http://$user:$pass@gitlab-it.gainde2000.sn/dssow/gitops.git main"
                         sh "mv ${DEPLOYMENT_FILE} ${DEPLOYMENT_FOLDER}/O-sante"
-                        sh "git add deploiement.yaml
+                        sh "git add ${DEPLOYMENT_FILE}"
                         sh "git commit -m 'Updated the deployment file' "
                         sh "git push --set-upstream origin master" 
                     }
