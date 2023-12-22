@@ -76,7 +76,7 @@ pipeline {
                     git init
                     git config --global user.name "dssow"
                     git config --global user.email "dssow@gainde2000.sn"
-                    git add deploiement.yml
+                    git add deploiement.yaml
                     git commit -m 'Updated the deployment file' """
                     withCredentials([usernamePassword(credentialsId: 'gitops-repo', passwordVariable: 'pass', usernameVariable: 'user')]) {
                         sh "git push https://$user:$pass@gitlab-it.gainde2000.sn/dssow/gitops.git main" 
