@@ -58,7 +58,6 @@ pipeline {
             }
         }
 
-    }
         stage('Updating Kubernetes deployment file'){
             steps {
                 sh "cat ${DEPLOYMENT_FILE}"
@@ -83,7 +82,7 @@ pipeline {
                 }
             }
         }
-    
+    }
     post {
         always {
             script {
