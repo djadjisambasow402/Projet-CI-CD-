@@ -66,7 +66,7 @@ pipeline {
                     sh "sed -i 's/${APP_NAME}.*/${APP_NAME}:${IMAGE_TAG}/g' ${DEPLOYMENT_FILE}"
                     sh "cat ${DEPLOYMENT_FILE}"
                     sh "mv ${DEPLOYMENT_FILE} ${DEPLOYMENT_FOLDER}"
-                    dir("${DEPLOYMENT_FOLDER"}){
+                    dir("${DEPLOYMENT_FOLDER}"){
                     withCredentials([usernamePassword(credentialsId: 'gitops-repo', passwordVariable: 'pass', usernameVariable: 'user')]) {
                       
                        git branch: 'main', url: 'http://gitlab-it.gainde2000.sn/dssow/gitops.git'
