@@ -62,8 +62,10 @@ pipeline {
         stage('Update Deployment File') {
             steps {
                 script {
+                    sh "cat ${DEPLOYMENT_FILE}"
                     sh "sed -i 's/${APP_NAME}.*/${APP_NAME}:${IMAGE_TAG}/g' ${DEPLOYMENT_FILE}"
-                    sh "mv ${DEPLOYMENT_FILE} ${DEPLOYMENT_FOLDER"}"
+                    sh "cat ${DEPLOYMENT_FILE}"
+                    sh "mv ${DEPLOYMENT_FILE} ${DEPLOYMENT_FOLDER}"
                     withCredentials([usernamePassword(credentialsId: 'gitops-repo', passwordVariable: 'pass', usernameVariable: 'user')]) {
                        dir("${DEPLOYMENT_FOLDER"}){
                        git branch: 'main', url: 'http://gitlab-it.gainde2000.sn/dssow/gitops.git'
