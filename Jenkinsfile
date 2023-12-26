@@ -79,7 +79,7 @@ pipeline {
             steps {
                 script {
                     dir("${DEPLOYMENT_FOLDER}"){
-                    withCredentials([string(credentialsId: 'github', variable: 'GITHUB_TOKEN')]) {
+                    withCredentials([usernamePassword(credentialsId: 'gitops-repo', passwordVariable: 'pass', usernameVariable: 'user')]) {
                         sh "mv ${DEPLOYMENT_FILE} ${DEPLOYMENT_FOLDER}/O-sante"
                         dir("${DEPLOYMENT_FOLDER}/O-sante"){
                         sh "git add ${DEPLOYMENT_FILE}"
