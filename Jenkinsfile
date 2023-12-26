@@ -59,14 +59,6 @@ pipeline {
             }
         }
 
-   //     stage('Updating Kubernetes deployment file'){
-     //       steps {
-       //         sh "cat ${DEPLOYMENT_FILE}"
-         //       sh "sed -i 's/${APP_NAME}.*/${APP_NAME}:${IMAGE_TAG}/g' ${DEPLOYMENT_FILE}"
-           //     sh "cat ${DEPLOYMENT_FILE}"
-             //   sh "mv ${DEPLOYMENT_FILE} ${DEPLOYMENT_FOLDER}"
-            //}
-        //}
             
         stage('Checkout Code') {
             steps {
