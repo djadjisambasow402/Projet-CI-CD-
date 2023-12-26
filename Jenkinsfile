@@ -68,37 +68,27 @@ pipeline {
             }
         }
             
-        stage('Push the changed deployment file to Git'){
+        stage('Checkout Code') {
+            steps {
+                dir("${DEPLOYMENT_FOLDER}"){
+                git branch: 'main', credentialsId: 'gitops-repo', url: 'http://gitlab-it.gainde2000.sn/dssow/gitops.git'
+                }
+            }
+        }
+        stage('Update Deployment File') {
             steps {
                 script {
                     dir("${DEPLOYMENT_FOLDER}"){
-                    sh """
-                    git init
-                    git config --global user.name "dssow"
-                    git config --global user.email "dssow@gainde2000.sn"
-                    """
-                    withCredentials([usernamePassword(credentialsId: 'gitops-repo', passwordVariable: 'pass', usernameVariable: 'user')]) {
-                        sh "git remote add origin http://$user:$pass@gitlab-it.gainde2000.sn/dssow/gitops.git"
-                        sh "git pull http://$user:$pass@gitlab-it.gainde2000.sn/dssow/gitops.git main"
+                    withCredentials([string(credentialsId: 'github', variable: 'GITHUB_TOKEN')]) {
                         sh "mv ${DEPLOYMENT_FILE} ${DEPLOYMENT_FOLDER}/O-sante"
                         dir("${DEPLOYMENT_FOLDER}/O-sante"){
                         sh "git add ${DEPLOYMENT_FILE}"
                         sh "git commit -m 'Updated the deployment file' "
-                        sh "git push --set-upstream origin master"
+                        sh "git push https://$user:$pass@gitlab-it.gainde2000.sn/dssow/gitops.git HEAD:main"
                         }
-                         
+                    }
                     }
                 }
-            }
-        }
-        }
-        stage('delete'){
-            steps {
-                dir("/var/lib/jenkins/"){
-                sh "rm -rf deploiement"
-                sh "rm -rf deploiement@tmp/"
-                sh "mkdir deploiement"
-            }
             }
         }
 
