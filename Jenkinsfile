@@ -69,7 +69,7 @@ pipeline {
                     dir("${DEPLOYMENT_FOLDER}"){
                     withCredentials([usernamePassword(credentialsId: 'gitops-repo', passwordVariable: 'pass', usernameVariable: 'user')]) {
                       
-                       git branch: 'main', url: 'http://gitlab-it.gainde2000.sn/dssow/gitops.git'
+                       git branch: 'main', url: 'http://${user}:${pass}@gitlab-it.gainde2000.sn/dssow/gitops.git'
                        sh 'git add ${DEPLOYMENT_FILE}'
                        sh "git commit -m 'Update deployment image to ${DEPLOYMENT_FILE}'"
                        sh "git push http://${user}:${pass}@gitlab-it.gainde2000.sn/dssow/gitops.git HEAD:main"
