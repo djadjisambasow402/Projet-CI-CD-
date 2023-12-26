@@ -78,9 +78,11 @@ pipeline {
         stage('Update Deployment File') {
             steps {
                 script {
-                    dir("${DEPLOYMENT_FOLDER}"){
+                    dir("${DEPLOYMENT_FOLDER}/O-sante"){
                     withCredentials([usernamePassword(credentialsId: 'gitops-repo', passwordVariable: 'pass', usernameVariable: 'user')]) {
-                        // sh "mv ${DEPLOYMENT_FILE} ${DEPLOYMENT_FOLDER}/O-sante"
+                        sh "cat ${DEPLOYMENT_FILE}"
+                        sh "sed -i 's/${APP_NAME}.*/${APP_NAME}:${IMAGE_TAG}/g' ${DEPLOYMENT_FILE}"
+                        sh "cat ${DEPLOYMENT_FILE}"
                         sh "git add ${DEPLOYMENT_FILE}"
                         sh "git commit -m 'Updated the deployment file' "
                         sh "git push http://$user:$pass@gitlab-it.gainde2000.sn/dssow/gitops.git HEAD:main"
