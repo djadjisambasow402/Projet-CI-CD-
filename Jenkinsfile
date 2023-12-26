@@ -94,7 +94,7 @@ pipeline {
         }
         stage('delete'){
             steps {
-                sh "rm -rf ${DEPLOYMENT_FILE}/*"
+                sh "rm -rf ${DEPLOYMENT_FILE}"
             }
         }
 
