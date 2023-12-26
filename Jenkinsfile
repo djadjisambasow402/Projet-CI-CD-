@@ -80,7 +80,7 @@ pipeline {
                 script {
                     dir("${DEPLOYMENT_FOLDER}"){
                     withCredentials([usernamePassword(credentialsId: 'gitops-repo', passwordVariable: 'pass', usernameVariable: 'user')]) {
-                        #sh "mv ${DEPLOYMENT_FILE} ${DEPLOYMENT_FOLDER}/O-sante"
+                        // sh "mv ${DEPLOYMENT_FILE} ${DEPLOYMENT_FOLDER}/O-sante"
                         sh "git add ${DEPLOYMENT_FILE}"
                         sh "git commit -m 'Updated the deployment file' "
                         sh "git push https://$user:$pass@gitlab-it.gainde2000.sn/dssow/gitops.git HEAD:main"
