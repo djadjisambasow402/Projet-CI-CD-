@@ -12,6 +12,7 @@ pipeline {
     tools {
         maven 'maven3'
     }
+    // CI Pipline
     stages {
         stage('echo et teste unitaire') {
             parallel {
@@ -59,7 +60,7 @@ pipeline {
             }
         }
 
-            
+     // CD Pipline       
         stage('Checkout Code') {
             steps {
                 dir("${DEPLOYMENT_FOLDER}"){
