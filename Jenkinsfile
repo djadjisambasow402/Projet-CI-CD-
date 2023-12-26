@@ -94,7 +94,11 @@ pipeline {
         }
         stage('delete'){
             steps {
-                sh "rm -rf ${DEPLOYMENT_FILE}"
+                dir("/var/lib/jenkins/"){
+                sh "rm -rf deploiement"
+                sh "rm -rf deploiement@tmp/"
+                sh "mkdir deploiement"
+            }
             }
         }
 
